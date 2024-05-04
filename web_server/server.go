@@ -20,18 +20,20 @@ func check(e error) {
 func loadPageData(path string) []byte {
 	
 	var filename string
+	header := "HTTP/1.1 200 OK\r\n\r\n"
 
 	switch path {
 		case "/", "/index.html":
 			filename = "index.html"
 		default:
+			header = "HTTP/1.1 404 Not Found\r\n\r\n"
 			filename = "404.html"
 	}
 	
-	data, err := os.ReadFile(filepath.Join("pages", filename))
+	pageData, err := os.ReadFile(filepath.Join("pages", filename))
 	check(err)
 
-	return data
+	return append([]byte(header), pageData...)
 }
 
 
@@ -55,11 +57,8 @@ func handleConnection(conn net.Conn) {
 	// Load the data for the requested page
 	pageData := loadPageData(path)
 
-	// Append HTTP response header to the page data
-	response := append([]byte("HTTP/1.1 200 OK\r\n\r\n"), pageData...)
-
 	// Send a response back to the person contacting us
-	_, err = conn.Write(response)
+	_, err = conn.Write(pageData)
 	check(err)
 }
 
