@@ -37,8 +37,8 @@ func loadPageData(path string) []byte {
 }
 
 
-// handleConnection handles incoming HTTP requests
-func handleConnection(conn net.Conn) {
+// handleRequest handles incoming HTTP requests
+func handleRequest(conn net.Conn) {
 	// Close the connection when the function exits
 	defer conn.Close()
 
@@ -48,6 +48,7 @@ func handleConnection(conn net.Conn) {
 	_, err := conn.Read(buffer)
 	check(err)
 
+	// TODO: We should validate that the request is an HTTP request
 	// Get the first line of the request
 	request := string(buffer)
 	request = strings.Split(request, "\n")[0]
@@ -78,7 +79,7 @@ func main() {
 		check(err)
 
 		// Handle the connection in a new goroutine
-		go handleConnection(conn)
+		go handleRequest(conn)
 
 	}
 }
