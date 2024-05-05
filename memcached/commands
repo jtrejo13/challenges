@@ -1,5 +1,8 @@
-set data 0 0 1
+set data 0 100 1
 1234
 
-set test2 1 0 7 noreply
+replace data 0 10 1
+4321
+
+set test2 1 0 7
 testing
